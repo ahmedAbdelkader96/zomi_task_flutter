@@ -34,7 +34,7 @@ class AuthRepository implements IAuthRepository {
         "authenticationType": 'email',
       };
 
-      var url = Uri.parse('${dotenv.env['end_point']}/user/signup');
+      var url = Uri.parse('${dotenv.env['end_point']}/user/signup_email');
       var res =
           await http.post(url, body: body).timeout(const Duration(seconds: 60));
 
@@ -54,7 +54,7 @@ class AuthRepository implements IAuthRepository {
         "email": email,
         "password": password,
       };
-      var url = Uri.parse('${dotenv.env['end_point']}/user/login');
+      var url = Uri.parse('${dotenv.env['end_point']}/user/login_email');
       var res =
           await http.post(url, body: body).timeout(const Duration(seconds: 60));
       return res;
@@ -81,7 +81,7 @@ class AuthRepository implements IAuthRepository {
           "googleId": googleUser.id
         };
 
-        var url = Uri.parse('${dotenv.env['end_point']}/user/sign_google');
+        var url = Uri.parse('${dotenv.env['end_point']}/user/check_google');
         var res = await http
             .post(url, body: body)
             .timeout(const Duration(seconds: 60));

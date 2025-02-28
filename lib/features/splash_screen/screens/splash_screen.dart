@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:task/global/methods_helpers_functions/local_storage_helper.dart';
 import 'package:task/global/navigation_routes/routes.dart';
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:encrypt/encrypt.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

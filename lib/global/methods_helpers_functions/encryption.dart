@@ -1,27 +1,24 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EncryptionUtils {
-  static IV iv = IV.fromLength(16);
-  static enc.Key key = enc.Key.fromSecureRandom(32);
+  static IV iv = IV.fromLength(16); // Consider generating a new IV for each encryption
+  static enc.Key key = enc.Key.fromBase64(dotenv.env['encKey']!);
   static Encrypter encrypter = Encrypter(AES(key));
 
   static String encryptAES(String text) {
-    return encrypter.encrypt(text, iv: iv).base64;
+    final iv = IV.fromLength(16);
+    final encrypted = encrypter.encrypt(text, iv: iv);
+    return '${iv.base64}:${encrypted.base64}';
   }
 
   static String decryptAES(String encrypted) {
-    final Uint8List encryptedBytesWithSalt = base64.decode(encrypted);
-    final Uint8List encryptedBytes = encryptedBytesWithSalt.sublist(
-      0,
-      encryptedBytesWithSalt.length,
-    );
-    final String decrypted =
-        encrypter.decrypt64(base64.encode(encryptedBytes), iv: iv);
+    final parts = encrypted.split(':');
+    final iv = IV.fromBase64(parts[0]);
+    final encryptedText = parts[1];
 
-    return decrypted;
+    // Decrypt using the extracted IV
+    return encrypter.decrypt64(encryptedText, iv: iv);
   }
 }

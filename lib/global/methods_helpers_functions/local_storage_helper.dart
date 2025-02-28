@@ -1,9 +1,5 @@
-import 'dart:developer';
-
-import 'package:encrypt/encrypt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task/global/methods_helpers_functions/encryption.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 class LocalStorageHelper {
   static Future<void> setString(
@@ -16,8 +12,8 @@ class LocalStorageHelper {
   static Future<String?> getString({required String key}) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     String? encrypted = sharedPreferences.getString(key);
-    final decrypted = EncryptionUtils.decryptAES(encrypted!);
-    return decrypted;
+    if (encrypted == null) return null;
+    return EncryptionUtils.decryptAES(encrypted);
   }
 
   static Future<void> setBool(
@@ -28,8 +24,7 @@ class LocalStorageHelper {
 
   static Future<bool?> getBool({required String key}) async {
     final sharedPreferences = await SharedPreferences.getInstance();
-    final storageValue = sharedPreferences.getBool(key);
-    return storageValue;
+    return sharedPreferences.getBool(key);
   }
 
   static Future<void> remove({required String key}) async {
@@ -37,18 +32,21 @@ class LocalStorageHelper {
     await sharedPreferences.remove(key);
   }
 
-  static Future<void> saveUserMainData(
-      {required String userId,
-      required String token,
-      required String refreshToken}) async {
+  static Future<void> saveUserMainData({
+    required String userId,
+    required String token,
+    required String refreshToken,
+  }) async {
     await setString(key: 'user_id', value: userId);
     await setString(key: 'token', value: token);
     await setString(key: 'refresh_token', value: refreshToken);
     await setBool(key: 'is_authenticated', value: true);
   }
 
-  static Future<void> saveUserTokens(
-      {required String token, required String refreshToken}) async {
+  static Future<void> saveUserTokens({
+    required String token,
+    required String refreshToken,
+  }) async {
     await setString(key: 'token', value: token);
     await setString(key: 'refresh_token', value: refreshToken);
   }
